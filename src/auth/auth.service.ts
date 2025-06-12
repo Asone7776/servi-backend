@@ -1,4 +1,4 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { UsersService } from '../users/users.service';
 import { HashingService } from './services/hashing.abstract.service';
 import { User } from '@prisma/client';
@@ -16,7 +16,7 @@ export class AuthService {
     const user = await this.usersService.findOne(email);
     const match = await this.hashingService.compare(password, user.password);
     if (!match) {
-      throw new UnauthorizedException('Invalid Password');
+      throw new BadRequestException('Invalid Password');
     }
     const { password: _password, ...rest } = user;
     return rest;

@@ -1,0 +1,27 @@
+model Company {
+  id          Int            @id @default(autoincrement())
+  title       String
+  address     String
+  phone       String
+  email       String?
+  logo        String?
+  website     String?
+  description String?
+  users       CompanyUsers[]
+  created_at  DateTime       @default(now())
+  updated_at  DateTime       @updatedAt
+
+  @@map("companies")
+}
+
+model CompanyUsers {
+  company_id  Int
+  user_id     Int
+  user        User     @relation(fields: [user_id], references: [id], onDelete: Restrict)
+  company     Company  @relation(fields: [company_id], references: [id], onDelete: Restrict)
+  assigned_at DateTime @default(now())
+
+  @@id([user_id, company_id])
+  @@index([company_id, user_id])
+  @@map("company_users")
+}

@@ -1,0 +1,23 @@
+model CarType {
+  id           Int                  @id @default(autoincrement())
+  type         String               @unique
+  translations CarTypeTranslation[]
+  cars         Car[]
+  created_at   DateTime             @default(now())
+  updated_at   DateTime             @updatedAt
+
+  @@index([type])
+  @@map("car_types")
+}
+
+model CarTypeTranslation {
+  id          Int     @id @default(autoincrement())
+  lang        String
+  title       String?
+  car_type_id Int
+  car_type    CarType @relation(fields: [car_type_id], references: [id], onDelete: Cascade)
+
+  @@unique([lang, car_type_id])
+  @@index([car_type_id])
+  @@map("car_type_translations")
+}
