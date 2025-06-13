@@ -1,6 +1,7 @@
 import { NestFactory } from '@nestjs/core';
-import { AppModule } from './app.module';
+import { AppModule } from '@app/app.module';
 import { ValidationPipe } from '@nestjs/common';
+import { PrismaClientExceptionFilter } from '@prisma/filters/catch';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -16,6 +17,7 @@ async function bootstrap() {
       },
     }),
   );
+  app.useGlobalFilters(new PrismaClientExceptionFilter());
   await app.listen(application_port, () => {
     console.log(`Server is running on ${application_port} port`);
   });
