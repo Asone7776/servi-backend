@@ -1,10 +1,11 @@
 model Car {
-  id          Int     @id @default(autoincrement())
-  title       String
-  user_id     Int
-  car_type_id Int
-  user        User    @relation(fields: [user_id], references: [id])
-  car_type    CarType @relation(fields: [car_type_id], references: [id])
+  id            Int     @id @default(autoincrement())
+  title         String
+  user_id       Int
+  car_type_id   Int
+  license_plate String
+  user          User    @relation(fields: [user_id], references: [id])
+  car_type      CarType @relation(fields: [car_type_id], references: [id])
 
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt

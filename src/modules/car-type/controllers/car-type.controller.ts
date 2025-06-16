@@ -27,17 +27,17 @@ export class CarTypeController {
     return this.carTypeService.findAll(query);
   }
 
-  @Get(':id')
+  @Get('/show/:id')
   findOne(@Param('id') id: string) {
     return this.carTypeService.findOne(+id);
   }
 
-  @Patch(':id')
+  @Patch('/update/:id')
   update(@Param('id') id: string, @Body() updateCarTypeDto: UpdateCarTypeDto) {
     return this.carTypeService.update(+id, updateCarTypeDto);
   }
 
-  @Delete(':id')
+  @Delete('/remove/:id')
   remove(@Param('id') id: string) {
     return this.carTypeService.remove(+id);
   }
