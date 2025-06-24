@@ -11,7 +11,7 @@ import { LocalAuthGuard } from '@modules/auth/guards/local-auth.guard';
 import { AuthService } from '@modules/auth/services/auth.service';
 import { Public } from '@modules/auth/decorators/is-public';
 
-@Controller('api/auth')
+@Controller('auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 

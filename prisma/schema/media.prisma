@@ -1,0 +1,12 @@
+model Media {
+  id         Int      @id @default(autoincrement())
+  url        String
+  type       String
+  size       Int?
+  entity_id  Int
+  entity     String
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  @@map("media")
+}

@@ -6,6 +6,7 @@ import { PrismaClientExceptionFilter } from '@prisma/filters/catch';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   const application_port = process.env.PORT ?? 3000;
+  app.setGlobalPrefix('api');
   app.enableCors();
   app.useGlobalPipes(
     new ValidationPipe({

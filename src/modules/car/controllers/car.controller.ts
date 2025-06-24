@@ -15,7 +15,7 @@ import { BaseListDto } from '@shared/dto/base-list.dto';
 import { CurrentUser } from '@modules/auth/decorators/current-user';
 import { User } from '@prisma/client';
 
-@Controller('api/cars')
+@Controller('cars')
 export class CarController {
   constructor(private readonly carService: CarService) {}
 

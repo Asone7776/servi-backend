@@ -1,0 +1,17 @@
+enum BannerLocations {
+  TOP
+  MIDDLE
+  BOTTOM
+}
+
+model Banner {
+  id       Int             @id @default(autoincrement())
+  position Int?
+  is_main  Boolean?        @default(false)
+  location BannerLocations @default(TOP)
+
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  @@map("banners")
+}

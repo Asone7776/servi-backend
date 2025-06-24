@@ -13,7 +13,7 @@ import { CreateCarTypeDto } from '@modules/car-type/dto/create-car-type.dto';
 import { UpdateCarTypeDto } from '@modules/car-type/dto/update-car-type.dto';
 import { BaseListDto } from '@shared/dto/base-list.dto';
 
-@Controller('api/car-types')
+@Controller('car-types')
 export class CarTypeController {
   constructor(private readonly carTypeService: CarTypeService) {}
 
