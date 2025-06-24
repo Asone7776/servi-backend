@@ -16,6 +16,7 @@ export class MediaService {
         data: {
           url: file_path,
           type: media.mimetype,
+          size: media.size,
           ...data,
         },
       });
