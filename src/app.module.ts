@@ -20,11 +20,11 @@ console.log(join(cwd(), 'uploads'));
     }),
     ConfigModule.forRoot(),
     CoreModule,
+    MediaModule,
     UsersModule,
     CarTypeModule,
     CarModule,
     BannerModule,
-    MediaModule,
   ],
 })
 export class AppModule {}

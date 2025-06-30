@@ -6,23 +6,44 @@ import {
   Patch,
   Param,
   Delete,
+  UseInterceptors,
+  UploadedFile,
+  Query,
+  ParseFilePipeBuilder,
 } from '@nestjs/common';
 import { BannerService } from '@modules/banner/services/banner.service';
 import { CreateBannerDto } from '@modules/banner/dto/create-banner.dto';
 import { UpdateBannerDto } from '@modules/banner/dto/update-banner.dto';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { BaseListDto } from '@shared/dto/base-list.dto';
 
 @Controller('banners')
 export class BannerController {
   constructor(private readonly bannerService: BannerService) {}
 
-  @Post()
-  create(@Body() createBannerDto: CreateBannerDto) {
-    return this.bannerService.create(createBannerDto);
+  @Post('/create')
+  @UseInterceptors(FileInterceptor('media'))
+  create(
+    @Body() createBannerDto: CreateBannerDto,
+    @UploadedFile(
+      new ParseFilePipeBuilder()
+        .addFileTypeValidator({
+          fileType: /(jpg|png|jpeg)$/,
+        })
+        .addMaxSizeValidator({
+          maxSize: 5 * 1024 * 1024,
+          message: 'File size is too big',
+        })
+        .build(),
+    )
+    media?: Express.Multer.File,
+  ) {
+    return this.bannerService.create(createBannerDto, media);
   }
 
   @Get()
-  findAll() {
-    return this.bannerService.findAll();
+  findAll(@Query() query: BaseListDto) {
+    return this.bannerService.findAll(query);
   }
 
   @Get('/show/:id')
@@ -30,9 +51,25 @@ export class BannerController {
     return this.bannerService.findOne(+id);
   }
 
+  @UseInterceptors(FileInterceptor('media'))
   @Patch('update/:id')
-  update(@Param('id') id: string, @Body() updateBannerDto: UpdateBannerDto) {
-    return this.bannerService.update(+id, updateBannerDto);
+  update(
+    @Param('id') id: string,
+    @Body() updateBannerDto: UpdateBannerDto,
+    @UploadedFile(
+      new ParseFilePipeBuilder()
+        .addFileTypeValidator({
+          fileType: /(jpg|png|jpeg)$/,
+        })
+        .addMaxSizeValidator({
+          maxSize: 5 * 1024 * 1024,
+          message: 'File size is too big',
+        })
+        .build(),
+    )
+    media?: Express.Multer.File,
+  ) {
+    return this.bannerService.update(+id, updateBannerDto, media);
   }
 
   @Delete('remove/:id')

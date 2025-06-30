@@ -1,4 +1,5 @@
-import { IsPositive } from 'class-validator';
+import { IsOptional, IsPositive } from 'class-validator';
+import { Type } from 'class-transformer';
 
 enum BannerLocations {
   TOP = 'TOP',
@@ -8,8 +9,10 @@ enum BannerLocations {
 
 export class CreateBannerDto {
   @IsPositive()
+  @Type(() => Number)
   position?: number;
-  media?: File;
+  @IsOptional()
   is_main?: boolean;
+  @IsOptional()
   location?: BannerLocations;
 }

@@ -1,13 +1,14 @@
 import * as fs from 'node:fs';
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { PrismaService } from '@prisma/services/prisma.service';
-import { CreateMediaDto } from '@modules/media/dto/create-media.dto';
+
+// import { CreateMediaDto } from '@modules/media/dto/create-media.dto';
 
 @Injectable()
 export class MediaService {
   constructor(private prismaService: PrismaService) {}
 
-  async upload(media: Express.Multer.File, data: CreateMediaDto) {
+  async upload(media: Express.Multer.File) {
     const filename = `${Date.now()}-${media.originalname}`;
     const file_path = `uploads/${filename}`;
     try {
@@ -17,7 +18,6 @@ export class MediaService {
           url: file_path,
           type: media.mimetype,
           size: media.size,
-          ...data,
         },
       });
     } catch (error) {

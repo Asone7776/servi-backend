@@ -9,9 +9,23 @@ model Banner {
   position Int?
   is_main  Boolean?        @default(false)
   location BannerLocations @default(TOP)
+  media    BannerMedia[]
 
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
 
   @@map("banners")
+}
+
+model BannerMedia {
+  id         Int      @id @default(autoincrement())
+  banner_id  Int
+  media_id   Int
+  banner     Banner   @relation(fields: [banner_id], references: [id], onDelete: Cascade)
+  media      Media    @relation(fields: [media_id], references: [id], onDelete: Cascade)
+  created_at DateTime @default(now())
+
+  @@unique([media_id, banner_id])
+  @@index([banner_id, media_id])
+  @@map("banners_media")
 }
