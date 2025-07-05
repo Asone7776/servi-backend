@@ -16,6 +16,7 @@ import { CreateBannerDto } from '@modules/banner/dto/create-banner.dto';
 import { UpdateBannerDto } from '@modules/banner/dto/update-banner.dto';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { BaseListDto } from '@shared/dto/base-list.dto';
+import { ReorderBannerDto } from '@modules/banner/dto/reorder-banner.dto';
 
 @Controller('banners')
 export class BannerController {
@@ -65,7 +66,9 @@ export class BannerController {
           maxSize: 5 * 1024 * 1024,
           message: 'File size is too big',
         })
-        .build(),
+        .build({
+          fileIsRequired: false,
+        }),
     )
     media?: Express.Multer.File,
   ) {
@@ -75,5 +78,11 @@ export class BannerController {
   @Delete('remove/:id')
   remove(@Param('id') id: string) {
     return this.bannerService.remove(+id);
+  }
+
+  @Patch('reorder')
+  reorder(@Body() reorderBannerDto: ReorderBannerDto) {
+    console.log(reorderBannerDto);
+    return this.bannerService.reorder(reorderBannerDto.banner_ids);
   }
 }

@@ -7,7 +7,6 @@ enum BannerLocations {
 model Banner {
   id       Int             @id @default(autoincrement())
   position Int?
-  is_main  Boolean?        @default(false)
   location BannerLocations @default(TOP)
   media    BannerMedia[]
 

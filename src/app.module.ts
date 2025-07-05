@@ -9,8 +9,7 @@ import { MediaModule } from '@modules/media/media.module';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { join } from 'path';
 import { cwd } from 'node:process';
-
-console.log(join(cwd(), 'uploads'));
+import { ReferenceModule } from '@modules/reference/reference.module';
 
 @Module({
   imports: [
@@ -25,6 +24,7 @@ console.log(join(cwd(), 'uploads'));
     CarTypeModule,
     CarModule,
     BannerModule,
+    ReferenceModule,
   ],
 })
 export class AppModule {}

@@ -2,8 +2,6 @@ import * as fs from 'node:fs';
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { PrismaService } from '@prisma/services/prisma.service';
 
-// import { CreateMediaDto } from '@modules/media/dto/create-media.dto';
-
 @Injectable()
 export class MediaService {
   constructor(private prismaService: PrismaService) {}

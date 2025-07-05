@@ -20,9 +20,10 @@ export class BannerService {
     if (media) {
       media_to_upload = await this.mediaService.upload(media);
     }
+    const count = await this.prismaService.banner.count();
     const created_banner = await this.prismaService.banner.create({
       data: {
-        position: createBannerDto.position,
+        position: count + 1,
         location: createBannerDto.location,
       },
     });
@@ -52,6 +53,11 @@ export class BannerService {
     return await this.paginationService.makePagination('banner', {
       page: query?.page ? Number(query.page) : 1,
       perPage: query.perPage ? Number(query.page) : 10,
+      orderBy: [
+        {
+          position: 'asc',
+        },
+      ],
       include: {
         media: {
           include: {
@@ -77,24 +83,48 @@ export class BannerService {
     });
   }
 
-  update(
+  async update(
     id: number,
     updateBannerDto: UpdateBannerDto,
     media?: Express.Multer.File,
   ) {
-    return `This action updates a #${id} banner`;
+    let media_to_upload: Prisma.Media | undefined = undefined;
+    if (media) {
+      await this.remove_banner_media(id);
+      media_to_upload = await this.mediaService.upload(media);
+    }
+    await this.prismaService.banner.update({
+      where: {
+        id,
+      },
+      data: {
+        location: updateBannerDto.location,
+      },
+    });
+    if (media_to_upload) {
+      await this.prismaService.bannerMedia.create({
+        data: {
+          banner_id: id,
+          media_id: media_to_upload.id,
+        },
+      });
+    }
+    return await this.prismaService.banner.findFirstOrThrow({
+      where: {
+        id: id,
+      },
+      include: {
+        media: {
+          include: {
+            media: true,
+          },
+        },
+      },
+    });
   }
 
   async remove(id: number) {
-    const medias = await this.prismaService.bannerMedia.findMany({
-      where: {
-        banner_id: id,
-      },
-    });
-    for (const media of medias) {
-      await this.mediaService.remove(media.media_id);
-    }
-
+    await this.remove_banner_media(id);
     await this.prismaService.banner.delete({
       where: {
         id,
@@ -104,5 +134,34 @@ export class BannerService {
       success: true,
       message: `Successfully removed the banner`,
     };
+  }
+
+  async reorder(banners: number[]) {
+    const operations = banners.map((id, index: number) => {
+      return this.prismaService.banner.update({
+        where: {
+          id,
+        },
+        data: {
+          position: index + 1,
+        },
+      });
+    });
+    await this.prismaService.$transaction(operations);
+    return {
+      message: 'Successfully reordered',
+      success: true,
+    };
+  }
+
+  private async remove_banner_media(banner_id: number) {
+    const medias = await this.prismaService.bannerMedia.findMany({
+      where: {
+        banner_id,
+      },
+    });
+    for (const media of medias) {
+      await this.mediaService.remove(media.media_id);
+    }
   }
 }

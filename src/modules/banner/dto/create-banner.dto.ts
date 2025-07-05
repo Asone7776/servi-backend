@@ -1,5 +1,4 @@
-import { IsOptional, IsPositive } from 'class-validator';
-import { Type } from 'class-transformer';
+import { IsEnum, IsOptional } from 'class-validator';
 
 enum BannerLocations {
   TOP = 'TOP',
@@ -8,11 +7,7 @@ enum BannerLocations {
 }
 
 export class CreateBannerDto {
-  @IsPositive()
-  @Type(() => Number)
-  position?: number;
   @IsOptional()
-  is_main?: boolean;
-  @IsOptional()
+  @IsEnum(BannerLocations)
   location?: BannerLocations;
 }
