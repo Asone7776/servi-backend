@@ -1,0 +1,40 @@
+services:
+  # PostgreSQL
+  postgres:
+    image: postgres:16
+    container_name: postgres_db
+    restart: always
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: admin
+      POSTGRES_DB: servi
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - backend_net
+
+  # NestJS backend
+  backend:
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    container_name: servi
+    restart: always
+    ports:
+      - "3000:3000"
+    environment:
+      DATABASE_URL: postgres://admin:admin@postgres:5432/servi
+      JWT_SECRET: somesecretservi
+      JWT_EXPIRES_IN: 1d
+    depends_on:
+      - postgres
+    networks:
+      - backend_net
+
+volumes:
+  postgres_data:
+
+networks:
+  backend_net:
