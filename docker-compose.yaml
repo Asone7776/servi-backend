@@ -1,5 +1,5 @@
 services:
-  # PostgreSQL
+  # 🐘 PostgreSQL
   postgres:
     image: postgres:16
     container_name: postgres_db
@@ -15,21 +15,26 @@ services:
     networks:
       - backend_net
 
-  # NestJS backend
+  # 🧱 NestJS backend (dev mode)
   backend:
     build:
       context: ./
-      dockerfile: Dockerfile
-    container_name: servi
+      dockerfile: Dockerfile.dev
+    container_name: servi_backend
     restart: always
     ports:
       - "3000:3000"
     environment:
+      NODE_ENV: development
       DATABASE_URL: postgres://admin:admin@postgres:5432/servi
       JWT_SECRET: somesecretservi
       JWT_EXPIRES_IN: 1d
     depends_on:
       - postgres
+    volumes:
+      - .:/app
+      - /app/node_modules
+    command: pnpm run start:dev
     networks:
       - backend_net
 
